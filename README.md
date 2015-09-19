@@ -1,3 +1,3 @@
 # university-schedule-planner
-
+#
 ## Documentation
