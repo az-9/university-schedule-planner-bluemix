@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+
+    <link rel="stylesheet" href="stylesheets/bootstrap-rtl.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.min.css">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+    <!--[if lt IE 9]>
+    <script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js'></script>
+    <![endif]-->
+    <!--[if gte IE 9]><!-->
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <!--<![endif]-->
+    <script type="text/javascript"
+            src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.min.js"></script>
+    <script src="javascript/bootstrap.min.js"></script>
+    <link rel="stylesheet"
+          href="stylesheets/scheduleplanner.css">
+
+    <% if (departmentslist) { %>
+    <script>
+        var allDeps =
+        <%- JSON.stringify(departmentslist) %> //[{"UniversityID":0,"UniversityName":"KSU","Universities":[{"PlaceID":0,"PlaceName":"الرياض- طلاب","Degrees":[{"DegreeName":"المشارك","DegreeID":0,"Departments":[]},{"DegreeName":"الانتقالي","DegreeID":1,"Departments":[]},{"DegreeName":"الدبلوم","DegreeID":2,"Departments":[]},{"DegreeName":"بدون درجة","DegreeID":3,"Departments":[{"DepartmentName":"PY44A-مسار الكليات الهندسية والعلمية","DepartmentID":0},{"DepartmentName":"PY44B-مسار الكليات الهندسية والعلمية","DepartmentID":1}
+    </script>
+    <% } %>
+
+    <script src="javascript/scheduleplanner.core.js"></script>
+    <script src="javascript/scheduleplanner.2.js"></script>
+
+    <script>
+
+
+    </script>
+
+    <style>
+        body {
+            font-family: Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+        }
+
+        label {
+            padding: 0 10px 0 10px;
+        }
+
+        /* Variables */
+        /* Mixins */
+        /* Animations */
+        @-webkit-keyframes preloader-inside-white {
+            0% {
+                -webkit-transform: scale(0, 0);
+                -moz-transform: scale(0, 0);
+                -ms-transform: scale(0, 0);
+                -o-transform: scale(0, 0);
+                transform: scale(0, 0);
+            }
+            100% {
+                -webkit-transform: scale(1, 1);
+                -moz-transform: scale(1, 1);
+                -ms-transform: scale(1, 1);
+                -o-transform: scale(1, 1);
+                transform: scale(1, 1);
+            }
+        }
+
+        @keyframes preloader-inside-white {
+            0% {
+                -webkit-transform: scale(0, 0);
+                -moz-transform: scale(0, 0);
+                -ms-transform: scale(0, 0);
+                -o-transform: scale(0, 0);
+                transform: scale(0, 0);
+            }
+            100% {
+                -webkit-transform: scale(1, 1);
+                -moz-transform: scale(1, 1);
+                -ms-transform: scale(1, 1);
+                -o-transform: scale(1, 1);
+                transform: scale(1, 1);
+            }
+        }
+
+        @-webkit-keyframes preloader-inside-red {
+            0% {
+                -webkit-transform: scale(0, 0);
+                -moz-transform: scale(0, 0);
+                -ms-transform: scale(0, 0);
+                -o-transform: scale(0, 0);
+                transform: scale(0, 0);
+            }
+            30% {
+                -webkit-transform: scale(0, 0);
+                -moz-transform: scale(0, 0);
+                -ms-transform: scale(0, 0);
+                -o-transform: scale(0, 0);
+                transform: scale(0, 0);
+            }
+            100% {
+                -webkit-transform: scale(1, 1);
+                -moz-transform: scale(1, 1);
+                -ms-transform: scale(1, 1);
+                -o-transform: scale(1, 1);
+                transform: scale(1, 1);
+            }
+        }
+
+        @keyframes preloader-inside-red {
+            0% {
+                -webkit-transform: scale(0, 0);
+                -moz-transform: scale(0, 0);
+                -ms-transform: scale(0, 0);
+                -o-transform: scale(0, 0);
+                transform: scale(0, 0);
+            }
+            30% {
+                -webkit-transform: scale(0, 0);
+                -moz-transform: scale(0, 0);
+                -ms-transform: scale(0, 0);
+                -o-transform: scale(0, 0);
+                transform: scale(0, 0);
+            }
+            100% {
+                -webkit-transform: scale(1, 1);
+                -moz-transform: scale(1, 1);
+                -ms-transform: scale(1, 1);
+                -o-transform: scale(1, 1);
+                transform: scale(1, 1);
+            }
+        }
+
+        /* Styles */
+        .preloader {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            /* position: fixed; */
+            top: 0;
+            left: 0;
+            z-index: 999;
+            background: white;
+            text-align: center;
+        }
+
+        .preloader .preloader-container {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            margin: auto;
+            position: absolute;
+            top: 44%;
+            left: 0;
+            position: relative;
+        }
+
+        .preloader .preloader-container .animated-preloader {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #f35353;
+            border-radius: 50em;
+        }
+
+        .preloader .preloader-container .animated-preloader:after {
+            content: '';
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 50em;
+            background: white;
+            -webkit-animation: preloader-inside-white 1s ease-in-out infinite;
+            -ms-animation: preloader-inside-white 1s ease-in-out infinite;
+            animation: preloader-inside-white 1s ease-in-out infinite;
+        }
+
+        .preloader .preloader-container .animated-preloader:before {
+            content: '';
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            border-radius: 50em;
+            background: #f35353;
+            -webkit-animation: preloader-inside-red 1s ease-in-out infinite;
+            -ms-animation: preloader-inside-red 1s ease-in-out infinite;
+            animation: preloader-inside-red 1s ease-in-out infinite;
+        }
+
+        .modal {
+            text-align: center;
+        }
+
+        .modal:before {
+            display: inline-block;
+            vertical-align: middle;
+            content: " ";
+            height: 100%;
+        }
+
+        .modal-dialog {
+            display: inline-block;
+            text-align: left;
+            vertical-align: middle;
+        }
+    </style>
+    <title>منظم جداول جامعة الملك سعود</title>
+    <meta name="description" content=
+    " اداة تقترح لك جداول دراسية بأوقات مختلفة وعرضها في تصميم جميل ليتسنا لك الاختيار من بينها"
+            />
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="navbar-header">
+
+                    <a class="navbar-brand" href="#">
+                        workshp
+                        <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                    </a>
+
+                    <ul class="nav navbar-nav pull-left">
+                        <li class="active">
+                            <a href="">منظم الجداول لجامعة الملك سعود</a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="col-md-4">
+
+
+            </div>
+            <div class="col-md-4">
+
+            </div>
+        </div>
+    </div>
+
+</nav>
+
+<div class="container-fluid " role="main">
+    <div class="jumbotron ">
+
+
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+
+                <h2 style=" text-align: center;">
+                    <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                    &nbsp;منظم الجداول لجامعة الملك سعود&nbsp;&nbsp;
+                </h2></div>
+            <div class="col-md-4">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3"></div>
+    <div class=" col-md-6">
+        <div class="alert alert-danger" role="alert" id="error" style="display: none">
+            حصل خطأ حاول مجدداً
+        </div>
+        <div class="panel panel-default ">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <h3>
+                        بحث
+                    </h3></div>
+            </div>
+            <div class="panel-body">
+                <div id="step1">
+                    <form>
+                        <div class="form-group">
+                            <label for="university">الجامعة :</label>
+                            <select class=" form-control col-md-12" style="width: 100%;" id="university">
+                                <option selected disabled>اختر الجامعة</option>
+                                <option id='0'>KSU جامعة الملك سعود</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="degree">المقر :</label>
+
+                            <select class="form-control col-md-12" id="place">
+                                <option selected disabled>اختر المقر</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="degree">درجة علمية :</label>
+                            <select class="form-control col-md-12" id="degree">
+                                <option selected disabled>اختر الدرجة</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="department">قسم :</label>
+                            <select class="form-control col-md-12" id="department">
+                                <option selected disabled>اختر القسم</option>
+                            </select>
+                        </div>
+                    </form>
+                    <hr>
+                    <div class="span7 text-center">
+                        <button onclick="if(verify_step1()){populateCoursesAddList();} return false;"
+                                class="btn btn-primary ">التالي
+                        </button>
+                    </div>
+                </div>
+                <div id="step2">
+                    <div class="control-group" id="fields">
+                        <label class="control-label" for="field1">اضافة مادة دراسية:</label>
+
+                        <div class="controls">
+                            <form id="coursesAddList" autocomplete="off">
+                                <div class="entry input-group col-md-12">
+
+
+                                    <select class="form-control">
+                                        <option>5</option>
+                                    </select>
+
+
+
+                                        <span class="input-group-btn">
+
+                                            <a style=" margin-right: 10px" type="button"
+                                               aria-expanded="false"
+                                               class="btn btn-default collapse-next">
+                                                <span class="glyphicon glyphicon-search"></span>
+                                            </a>
+
+                                            </span>
+                                            <span class="input-group-btn">
+                                        <a type="button" class="btn btn-success btn-add ">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                        </a>
+                                        </span>
+                                </div>
+
+
+                                <div class="collapse">
+                                    <div class="well">
+                                        <form class="form-inline">
+                                            <p>المحاضرين ( أسماء المحاضرين مفترقة بفاصلة مثل: السلمان ، اشرف ،أحمد
+                                                البدري ) :</p>
+
+                                            <div class="row">
+                                                <div class="form-group col-md-3">
+                                                    <select class="form-control filter_type">
+                                                        <option>يحتوي على</option>
+                                                        <option>لا يحتوي على</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group col-md-9">
+
+                                                    <input type="text" class="form-control filter_content">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+
+                            </form>
+                            <br>
+                            <small>اضغط على <span class="glyphicon glyphicon-plus gs"></span> لاضافة ماده جديدة
+                            </small>
+                        </div>
+                        <hr>
+                        <div class="span7 text-center">
+                            <button onclick="if(verify_step2()){populateSchedule();}return false;"
+                                    class="btn btn-primary ">التالي
+                            </button>
+                            <button onclick="$('#step1').show();$('#step2').hide();$('#step3').hide();$('#error').hide();return false;"
+                                    class="btn btn-default ">السابق
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="step3">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" checked> اظهار المتاحة فقط
+                        </label>
+                    </div>
+                    <br><br><br>
+
+                    <div id="calendar1" class="fc fc-ltr fc-unthemed">
+                        <div id="details1" class="datagrid">
+
+                        </div>
+                    </div>
+                    <div id="calendar2" class="fc fc-ltr fc-unthemed">
+                        <div id="details2" class="datagrid">
+
+                        </div>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;
+                    <div class="span7 text-center">
+                        <button onclick="$('#step1').hide();$('#step2').show();$('#step3').hide();return false;"
+                                type="submit"
+                                class="btn btn-default">السابق
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade in" id="loadingModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="preloader">
+                            <div class="preloader-container">
+                                <span class="animated-preloader"></span>
+                            </div>
+                        </div>
+                        <br>
+
+                        <h1 style="text-align: center">
+                            رجاءاً الانتظار
+                        </h1>
+                    </div>
+                    <div class="modal-footer" id="loadingCancel">
+                        <button type="button" class="btn btn-danger center-block" data-dismiss="modal">الغاء</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class=" col-md-3">
+
+    </div>
+</div>
+
+</body>
+</html>

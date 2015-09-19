@@ -1,0 +1,3 @@
+nodeProcessCommandLine: "D:\home\site\bin\iojs\iojs.exe" --harmony
+loggingEnabled: true
+devErrorsEnabled: true

@@ -1,0 +1,112 @@
+#background {
+    width: 900px;
+    margin: auto;
+}
+
+#selectDepartment {
+    width: 500px;
+    margin: auto;
+}
+
+#schedule {
+    width: 600px;
+    margin: auto;
+}
+
+#selectCourses {
+    width: 500px;
+    margin: auto;
+}
+
+#calendar1 {
+    /*width: 600px;*/
+    margin: 0 auto;
+}
+
+#calendar2 {
+    /*width: 600px;*/
+    margin: 0 auto;
+}
+
+#loading {
+    width: 100%;
+    margin: auto auto;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    height: 50%;
+    visibility: hidden;
+}
+
+#details1 {
+
+    overflow: auto;
+}
+
+#details2 {
+    overflow: auto;
+}
+
+.datagrid table {
+    border-collapse: collapse;
+    text-align: left;
+    width: 100%;
+}
+
+.datagrid {
+    font: normal 12px/150% Arial, Helvetica, sans-serif;
+    background: #fff;
+    overflow: hidden;
+    border: 1px solid #CFCFCF;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.datagrid table td,
+.datagrid table th {
+    padding: 3px 10px;
+}
+
+.datagrid table thead th {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #3A87AD), color-stop(1, #3A87AD));
+    background: -moz-linear-gradient(center top, #3A87AD 5%, #3A87AD 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3A87AD', endColorstr='#3A87AD');
+    background-color: #3A87AD;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: bold;
+    border-left: 1px solid #0070A8;
+}
+
+.datagrid table thead th:first-child {
+    border: none;
+}
+
+.datagrid table tbody td {
+    color: #00496B;
+    border-left: 1px solid #CDD4E0;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.datagrid table tbody .alt td {
+    background: #E6E6E6;
+    color: #00547A;
+}
+
+.datagrid table tbody td:first-child {
+    border-left: none;
+}
+
+.datagrid table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+div.dhtmlx_window_active, div.dhx_modal_cover_dv {
+    position: fixed !important;
+}
+
+#field {
+    margin-bottom: 20px;
+}
