@@ -147,7 +147,7 @@ var fetch = function fetch(university, placeID, degreeID, depID, callback) {//do
 
 
                     if (output["Error"] != undefined) {
-                        var e = "Error loading";
+                        var e = "Error fetching timed out";
                         console.log(e);
                         callback(null, e);
                         return;
@@ -553,7 +553,8 @@ var fetchPlaces = function (university, callback) { //done
 
                 try {
 
-                    console.log('error: '+err+'output:'+stdout);
+                    console.log('error: '+err+' output:'+stdout);
+                    if(err) console.log("error details: "+JSON.stringify(err));
                     var output = JSON.parse(stdout);
                 } catch (error) {
                     console.log("Error parsing fetched place");
