@@ -3,7 +3,7 @@
     require('newrelic');
 }
 
-process.env.NODE_ENV=undefined;
+process.env.NODE_ENV="development";
 
 var express = require('express');
 var path = require('path');
