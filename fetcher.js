@@ -20,6 +20,7 @@ childArgs = [
 
 
 var fetchDurationInSec = 60 * 60 * 24 //one day //[seconds]
+var fetchDepsInProgress=false;
 
 //var rawksu = JSON.parse('{"0":{"date":0},"1":{"date":0},"2":{"date":0},"3":{"date":0},"4":{"date":0},"5":{"date":0},"6":{"date":0},"7":{"date":0},"8":{"date":0},"9":{"date":0},"10":{"date":0},"11":{"date":0},"12":{"date":0},"13":{"date":0},"14":{"date":0},"15":{"date":0},"16":{"date":0},"17":{"date":0},"18":{"date":0},"19":{"date":0},"20":{"date":0},"21":{"date":0},"22":{"date":0},"23":{"date":0},"24":{"date":0},"25":{"date":0},"26":{"date":0},"27":{"date":0},"28":{"date":0},"29":{"date":0},"30":{"date":0},"31":{"date":0},"32":{"date":0},"33":{"date":0},"34":{"date":0},"35":{"date":0},"36":{"date":0},"37":{"date":0},"38":{"date":0},"39":{"date":0},"40":{"date":0},"41":{"date":0},"42":{"date":0},"43":{"date":0},"44":{"date":0},"45":{"date":0},"46":{"date":0},"47":{"date":0},"48":{"date":0},"49":{"date":0},"50":{"date":0},"51":{"date":0},"52":{"date":0},"53":{"date":0},"54":{"date":0},"55":{"date":0},"56":{"date":0},"57":{"date":0},"58":{"date":0},"59":{"date":0},"60":{"date":0},"61":{"date":0},"62":{"date":0},"63":{"date":0},"64":{"date":0},"65":{"date":0},"66":{"date":0},"67":{"date":0},"68":{"date":0},"69":{"date":0},"70":{"date":0},"71":{"date":0},"72":{"date":0},"73":{"date":0},"74":{"date":0},"75":{"date":0},"76":{"date":0},"77":{"date":0},"78":{"date":0},"79":{"date":0},"80":{"date":0},"81":{"date":0},"82":{"date":0},"83":{"date":0},"84":{"date":0},"85":{"date":0},"86":{"date":0},"87":{"date":0},"88":{"date":0},"89":{"date":0},"90":{"date":0},"91":{"date":0},"92":{"date":0},"93":{"date":0},"94":{"date":0},"95":{"date":0},"96":{"date":0},"97":{"date":0},"98":{"date":0},"99":{"date":0},"100":{"date":0},"101":{"date":0},"102":{"date":0},"103":{"date":0},"104":{"date":0},"105":{"date":0},"106":{"date":0},"107":{"date":0},"108":{"date":0},"109":{"date":0},"110":{"date":0},"111":{"date":0},"112":{"date":0},"113":{"date":0},"114":{"date":0},"115":{"date":0},"116":{"date":0},"117":{"date":0},"118":{"date":0},"119":{"date":0},"120":{"date":0},"121":{"date":0},"122":{"date":0},"123":{"date":0},"124":{"date":0}}');
 var universities = [{"UniversityName": "KSU", "UniversityID": 0, "PlacesFetchDate": 0, "Places": []}]; // JSON.parse('[{"UniversityName":"KSU","UniversityID":0,"PlacesFetchDate":0,"Places":[{"PlaceName":"riyadh males","PlaceID":0,"DegreesFetchDate":0,"Degrees":[{"DegreeName":"bachelor","DegreeID":0,"DepartmentsFetchDate":0,"Departments":[{"DepartmentName":"SWE","DepartmentID":121,"CoursesTitles":[],"Courses":["..."],"CoursesFetchDate":0}]}]}]},{}]');
@@ -80,7 +81,7 @@ var initQueues = function () {
             //console.log(JSON.stringify(data));
             callback();
         });
-    }, 10);
+    }, 1); //10
 
 }
 
@@ -124,20 +125,19 @@ var fetch = function fetch(university, placeID, degreeID, depID, callback) {//do
                 var output;
 
                 /* solution 1
-                try {
-                    output = JSON.parse(stdout);
-                } catch (error) {
-                    console.log(stdout);
-                    console.log("Error parsing fetched courses");
-                    callback(null, "Error parsing fetched courses");
-                    return;
-                }
-                */
-
+                 try {
+                 output = JSON.parse(stdout);
+                 } catch (error) {
+                 console.log(stdout);
+                 console.log("Error parsing fetched courses");
+                 callback(null, "Error parsing fetched courses");
+                 return;
+                 }
+                 */
 
 
                 fs.readFile('phantomOutput.txt', 'utf8', function (err, data) {
-                    if (err){
+                    if (err) {
                         console.log(stdout);
                         console.log("Error parsing fetched courses");
                         callback(null, "Error parsing fetched courses");
@@ -152,7 +152,6 @@ var fetch = function fetch(university, placeID, degreeID, depID, callback) {//do
                         callback(null, e);
                         return;
                     }
-
 
 
                     //console.log(JSON.stringify(output));
@@ -178,7 +177,7 @@ var fetch = function fetch(university, placeID, degreeID, depID, callback) {//do
 
                 });
 
-                });
+            });
 
 
         }
@@ -548,13 +547,13 @@ var fetchPlaces = function (university, callback) { //done
             }), null);
         } else {
             universities[0]["Places"] = [];//empty all ksu places
-            console.log("running "+path.join(__dirname, 'fetchPlaceKSUphantom.js')+" process using:"+ binPath);
+            console.log("running " + path.join(__dirname, 'fetchPlaceKSUphantom.js') + " process using:" + binPath);
             childProcess.execFile(binPath, childArgsDepKSU, function (err, stdout, stderr) {
 
                 try {
 
-                    console.log('error: '+err+' output:'+stdout);
-                    if(err) console.log("error details: "+JSON.stringify(err));
+                    console.log('error: ' + err + ' output:' + stdout);
+                    if (err) console.log("error details: " + JSON.stringify(err));
                     var output = JSON.parse(stdout);
                 } catch (error) {
                     console.log("Error parsing fetched place");
@@ -646,6 +645,14 @@ var fetchDegrees = function (university, callback) {// Done
 };
 
 var fetchDeps = function (callback) {
+    if (fetchDepsInProgress) {
+        if (callback != undefined) {
+            callback(getDeps());
+        }
+        return;
+    }
+    fetchDepsInProgress = true;
+
     var TotalDepsFetched = 0
     var starttime = Date.now();
 
@@ -659,6 +666,7 @@ var fetchDeps = function (callback) {
                 if (error != null) {
 
                     console.log(error);
+                    fetchDepsInProgress = false;
                 } else {
                     //test
                     console.log(data.length + ' places fetched');
@@ -666,6 +674,7 @@ var fetchDeps = function (callback) {
                         if (error2 != null) {
 
                             console.log(error2);
+                            fetchDepsInProgress = false;
                         } else {
                             console.log(data2.length + ' degrees fetched');
 
@@ -680,7 +689,6 @@ var fetchDeps = function (callback) {
 
                                     if (process.env.NODE_ENV === 'development' && j != 4)
                                         continue;
-
 
 
                                     (function () {
@@ -701,15 +709,17 @@ var fetchDeps = function (callback) {
                                                 if (callback != undefined) {
                                                     callback(getDeps());
                                                 }
+                                                fetchDepsInProgress = false;
                                             }
 
-                                            if (process.env.NODE_ENV === 'development'){
+                                            if (process.env.NODE_ENV === 'development') {
                                                 console.log(TotalDepsFetched + ' departments fetched in ' + (Date.now() - starttime) / 1000 + ' secs');
 
 
                                                 if (callback != undefined) {
                                                     callback(getDeps());
                                                 }
+                                                fetchDepsInProgress = false;
                                             }
                                         });
 
@@ -782,9 +792,13 @@ var isUniversityExist = function (uniName) { // no need
 //module.exports = { "fetch": fetch };
 module.exports = function () {
     initQueues();
-    fetchDeps(function () {
-        setInterval(fetchDeps, 500 * 1000);
-    });
+    if (process.env.NODE_ENV === 'development') {
+        setInterval(fetchDeps,  6*1000);
+    }else{
+        setInterval(fetchDeps,  60*60*1000);
+    }
+
+    fetchDeps();
 
     return {
 

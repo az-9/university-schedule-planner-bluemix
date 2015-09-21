@@ -119,7 +119,7 @@ page.open('https://edugate.ksu.edu.sa/ksu/ui/guest/timetable/index/scheduleTreeC
 
                 setTimeout(function () {
                     phantom.exit();
-                }, 2000);
+                }, 100*output.length);
             })
             
 
