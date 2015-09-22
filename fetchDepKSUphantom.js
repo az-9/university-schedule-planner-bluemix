@@ -31,7 +31,7 @@ page.onConsoleMessage = function (msg) {
 };
 
 function waitFor(testFx, onReady, timeOutMillis) {
-    var maxtimeOutMillis = timeOutMillis ? timeOutMillis : 10000, //< Default Max Timout is 3s
+    var maxtimeOutMillis = timeOutMillis ? timeOutMillis : 3000, //< Default Max Timout is 3s(3000)
         start = new Date().getTime(),
         condition = false,
         interval = setInterval(function () {
@@ -80,20 +80,20 @@ page.open('https://edugate.ksu.edu.sa/ksu/ui/guest/timetable/index/scheduleTreeC
         waitFor(function check() {
             return page.evaluate(function (placeID) {
                 return document.readyState === "complete" && $(".pui-dropdown-item.pui-dropdown-list-item.ui-corner-all.ui-state-highlight", $(".pui-dropdown-items.pui-dropdown-list.ui-widget-content.ui-widget.ui-helper-reset")[1]).index() == parseInt(placeID)
-                    }, system.args[1]);
+            }, system.args[1]);
 
         }, function onReady() {
 
-            page.evaluate(function ( degreeID) {
+            page.evaluate(function (degreeID) {
 
                 $(".pui-dropdown-item.pui-dropdown-list-item.ui-corner-all", $(".pui-dropdown-items.pui-dropdown-list.ui-widget-content.ui-widget.ui-helper-reset")[2]).eq(parseInt(degreeID)).click();
 
             }, system.args[2]);
 
             waitFor(function check() {
-                return page.evaluate(function ( degreeID,placeID) {
-                    return document.readyState === "complete" && $(".pui-dropdown-item.pui-dropdown-list-item.ui-corner-all.ui-state-highlight", $(".pui-dropdown-items.pui-dropdown-list.ui-widget-content.ui-widget.ui-helper-reset")[2]).index() == (parseInt(degreeID)+parseInt(placeID));
-                },system.args[2],system.args[1]);
+                return page.evaluate(function (degreeID, placeID) {
+                    return document.readyState === "complete" && $(".pui-dropdown-item.pui-dropdown-list-item.ui-corner-all.ui-state-highlight", $(".pui-dropdown-items.pui-dropdown-list.ui-widget-content.ui-widget.ui-helper-reset")[2]).index() == (parseInt(degreeID) + parseInt(placeID));
+                }, system.args[2], system.args[1]);
 
             }, function onReady() {
 
@@ -116,14 +116,18 @@ page.open('https://edugate.ksu.edu.sa/ksu/ui/guest/timetable/index/scheduleTreeC
                 console.log(JSON.stringify(output));
 
                 //fs.write("/Users/abdulazizm/WebstormProjects/phantomOutput.txt",JSON.stringify(output),'W');
-
-                setTimeout(function () {
-                    phantom.exit();
-                }, 100*output.length);
+                exit(0);
+                function exit(code) {
+                    setTimeout(function () {
+                        phantom.exit(code);
+                    }, 0);
+                    phantom.onError = function () {
+                    };
+                }
             })
-            
 
-        }, 10000);
+
+        });//10000
 
 
     }
