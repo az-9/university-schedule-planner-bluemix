@@ -18,7 +18,7 @@ router.get('/getcoursesAll', function (req, res) {
 });
 
 router.get('/getcourses/:coursesStringify', function (req, res) {
-    fetcher.getSubjects('ksu', 0,4, parseInt(JSON.parse(req.params.coursesStringify).department), JSON.parse(req.params.coursesStringify).coursesIndex, function (data, error) {
+    fetcher.getSubjects('ksu', parseInt(JSON.parse(req.params.coursesStringify).place),parseInt(JSON.parse(req.params.coursesStringify).degree), parseInt(JSON.parse(req.params.coursesStringify).department), JSON.parse(req.params.coursesStringify).coursesIndex, function (data, error) {
         if (error != null) {
             res.send(error);
         } else {

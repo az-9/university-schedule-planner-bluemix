@@ -98,14 +98,45 @@ function populateCoursesAddList(isback) {
 
 function populateSchedule() {
     selectedCoursesByIndex = [];
+    scheduleplanner.namesOfUnwantedTeachers = [];
+    scheduleplanner.namesOfWantedTeachers = [];
+
     $('#loadingModal').modal('toggle');
 
     $("#calendar1").css("display", "block");
     $("#calendar2").css("display", "block");
 
     $('#coursesAddList .entry select').each(function (indexSelect, selectEle) {
-        if (indexSelect != $('#coursesAddList .entry select').length - 1) selectedCoursesByIndex.push(selectEle.selectedIndex)
+        if (indexSelect != $('#coursesAddList .entry select').length - 1) {
+
+            selectedCoursesByIndex.push(selectEle.selectedIndex)
+        }
     });
+
+    $('#coursesAddList .collapse').each(function (indexSelect, selectEle) {
+        if ($.trim($(selectEle).find('.filter_content')[0].value).length > 0) {
+            var teachers_array = $(selectEle).find('.filter_content')[0].value.split('،');
+            teachers_array=teachers_array.map(function(teacher_){
+                return teacher_.replace(/^\s+|\s+$/g, "");;
+            });
+            if ($(selectEle).find('.filter_type')[0].selectedIndex) {
+                scheduleplanner.namesOfUnwantedTeachers.push(teachers_array);
+                scheduleplanner.namesOfWantedTeachers.push(new Array());
+            }
+
+            else {
+                scheduleplanner.namesOfUnwantedTeachers.push(new Array());
+                scheduleplanner.namesOfWantedTeachers.push(teachers_array);
+            }
+
+        } else {
+            scheduleplanner.namesOfUnwantedTeachers.push(new Array());
+            scheduleplanner.namesOfWantedTeachers.push(new Array());
+        }
+        //console.log(selectEle.children('filter_content').val);
+    });
+
+    console.log("namesOfWantedTeachers set");
     scheduleplanner.getCoursesByIndexAndCalculateSchedule(selectedCoursesByIndex, function (schedule) {
         if (schedule == undefined) {
             show_error('حصل خطأ ما أعد المحاولة مرة اخرى');
@@ -275,9 +306,9 @@ function scheduleToEvents2(start, end, timezone, callback) {
 
 }
 $(document).ready(function () {
-    $('#coursesAddList').on('click','.collapse-next',function(e){
+    $('#coursesAddList').on('click', '.collapse-next', function (e) {
         e.preventDefault();
-        if($(this).hasClass('active'))
+        if ($(this).hasClass('active'))
             $(this).removeClass('active');
         else
             $(this).addClass('active');
@@ -407,9 +438,8 @@ $(document).ready(function () {
     });
 
 
-
     //for crawlers
-    if(/bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent)){
+    if (/bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent)) {
         $('#error').parent().remove();
     }
 });

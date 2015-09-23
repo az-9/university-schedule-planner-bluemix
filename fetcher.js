@@ -674,14 +674,14 @@ var fetchDeps = function (callback) {
                     fetchDepsInProgress = false;
                 } else {
                     //test
-                    if ((Date.now() - starttime) > 50) console.log(data.length + ' places fetched');
+                    if ((Date.now() - starttime) > 100) console.log(data.length + ' places fetched');
                     fetchDegrees(uniname, function (data2, error2) {
                         if (error2 != null) {
 
                             console.log(error2);
                             fetchDepsInProgress = false;
                         } else {
-                            if ((Date.now() - starttime) > 50) console.log(data2.length + ' degrees fetched');
+                            if ((Date.now() - starttime) > 100) console.log(data2.length + ' degrees fetched');
 
 
                             for (var i = 0; i < universities[uniIndex]["Places"].length; i++) {
@@ -725,8 +725,9 @@ var fetchDeps = function (callback) {
                                     })();
                                 }
                             }
+
                             dep_queue.drain = function () {
-                                if ((Date.now() - starttime) > 50) console.log(TotalDepsFetched + ' departments fetched in ' + (Date.now() - starttime) / 1000 + ' secs');
+                                if ((Date.now() - starttime) > 1000) console.log(TotalDepsFetched + ' departments fetched in ' + (Date.now() - starttime) / 1000 + ' secs');
                                 fetchDepsInProgress = false;
                             };
 

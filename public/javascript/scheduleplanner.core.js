@@ -38,11 +38,11 @@ var scheduleplanner = {
                 schedules.push(schedulesComb[i]);
             }
         }
-        this.availableSelectedCourses = schedules.filter(function (filterArrayEle) {
+        scheduleplanner.availableSelectedCourses = schedules.filter(function (filterArrayEle) {
             return filterArrayEle["available"];
         });
         //console.log(availableSelectedCourses);
-        this.calculatedSchedule = schedules;
+        scheduleplanner.calculatedSchedule = schedules;
         return schedules;
 
     },
@@ -214,24 +214,32 @@ var scheduleplanner = {
     selectedDepartment: 0,
     selectedDegree: 0,
     selectedPlace: 0,
-    calculatedSchedule: [],
-    coursesInDepartment: JSON.parse('["100 سلم","101 ادا","101 سلم","101 كيح","101 كيم","102 سلم","103 سلم","103 فيز","104 سلم","104 فيز","105 سلم","106 ريض","106 سلم","107 سلم","108 سلم","111 عال","113 عال","122 بحث","151 ريض","200 ريض","200 مال","201 حسب","211 هاب","212 عال","215 عال","220 عال","227 عال","230 نال","244 ريض","254 ريض","303 هال","312 هاب","313 هاب","321 هاب","324 احص","333 هاب","335 نال","361 عال","381 هاب","385 نال","432 نال","434 هاب","439 هال","444 هاب","444 هال","455 هاب","466 هاب","472 نال","476 عال","477 هاب","478 عال","481 هاب","482 نال","485 هاب","493 نال","496 هاب","497 هاب","999 هاب"]'),
+    calculatedSchedule: []
+    ,
+    coursesInDepartment: JSON.parse('["100 سلم","101 ادا","101 سلم","101 كيح","101 كيم","102 سلم","103 سلم","103 فيز","104 سلم","104 فيز","105 سلم","106 ريض","106 سلم","107 سلم","108 سلم","111 عال","113 عال","122 بحث","151 ريض","200 ريض","200 مال","201 حسب","211 هاب","212 عال","215 عال","220 عال","227 عال","230 نال","244 ريض","254 ريض","303 هال","312 هاب","313 هاب","321 هاب","324 احص","333 هاب","335 نال","361 عال","381 هاب","385 نال","432 نال","434 هاب","439 هال","444 هاب","444 هال","455 هاب","466 هاب","472 نال","476 عال","477 هاب","478 عال","481 هاب","482 نال","485 هاب","493 نال","496 هاب","497 هاب","999 هاب"]')
+    ,
     selectedCoursesByIndex: []//[0,3,21]
     ,
-    selectedCourses: [],
+    selectedCourses: []
+    ,
     coursesTitles: []//previously coursesInDepartment ['math 200','computer 101','physics 106']
     ,
-    availableSelectedCourses: [],
+    availableSelectedCourses: []
+    ,
+    namesOfWantedTeachers: []//sorted by coursesAddList form order [['ahmed','khalid'],['bader']]
+    ,
+    namesOfUnwantedTeachers: []//sorted by coursesAddList form order [['ahmed','khalid'],['bader']],
 
+    ,
     getCoursesTitles: function (uni, uniPlace, uniDegree, uniDepartment, callback) { //helper
 
-        this.selectedUniversity = uni
-        this.selectedDepartment = uniDepartment;
-        this.selectedDegree = uniDegree;
-        this.selectedPlace = uniPlace;
+        scheduleplanner.selectedUniversity = uni;
+        scheduleplanner.selectedDepartment = uniDepartment;
+        scheduleplanner.selectedDegree = uniDegree;
+        scheduleplanner.selectedPlace = uniPlace;
 
         var pathtoRequest = ($(location).attr('href')[$(location).attr('href').length - 1].indexOf("/") > -1) ? $(location).attr('href') + "getcoursestitle/" : $(location).attr('href') + "/getcoursestitle/";
-        $.get(pathtoRequest + '{"department":' + this.selectedDepartment + ',"degree":' + this.selectedDegree + ',"place":' + this.selectedPlace + ',"university":' + this.selectedUniversity + '}', function (data, status) {
+        $.get(pathtoRequest + '{"department":' + scheduleplanner.selectedDepartment + ',"degree":' + scheduleplanner.selectedDegree + ',"place":' + scheduleplanner.selectedPlace + ',"university":' + scheduleplanner.selectedUniversity + '}', function (data, status) {
             try {
                 if (status == 'success') {
 
@@ -240,9 +248,9 @@ var scheduleplanner = {
                         callback();
                     } else {
 
-                        this.coursesTitles = JSON.parse(data);
+                        scheduleplanner.coursesTitles = JSON.parse(data);
 
-                        callback(this.coursesTitles);
+                        callback(scheduleplanner.coursesTitles);
 
                     }
                 } else {
@@ -260,9 +268,9 @@ var scheduleplanner = {
     ,
 
     getCoursesByIndexAndCalculateSchedule: function (indexArray, callback) { //helper
-
+        scheduleplanner.selectedCoursesByIndex = indexArray;
         var pathtoRequest = ($(location).attr('href')[$(location).attr('href').length - 1].indexOf("/") > -1) ? $(location).attr('href') + "getcourses/" : $(location).attr('href') + "/getcourses/";
-        $.get(pathtoRequest + '{"coursesIndex":' + JSON.stringify(indexArray) + ',"department":' + this.selectedDepartment + ',"degree":' + this.selectedDegree + ',"place":' + this.selectedPlace + ',"university":' + this.selectedUniversity + '}', function (data, status) {
+        $.get(pathtoRequest + '{"coursesIndex":' + JSON.stringify(indexArray) + ',"department":' + scheduleplanner.selectedDepartment + ',"degree":' + scheduleplanner.selectedDegree + ',"place":' + scheduleplanner.selectedPlace + ',"university":' + scheduleplanner.selectedUniversity + '}', function (data, status) {
             //console.log(JSON.parse(data));
             try {
                 if (status == 'success') {
@@ -270,8 +278,56 @@ var scheduleplanner = {
                     if (JSON.parse(data)["error"] != undefined) {
                         callback();
                     } else {
-                        this.selectedCourses = JSON.parse(data)["data"]["courses"];
+                        scheduleplanner.selectedCourses = JSON.parse(data)["data"]["courses"];
 
+                        console.log(scheduleplanner.selectedCourses);
+
+                        //wanted teachers
+                        var selectedCoursesAfterGettingWantedTeachers = scheduleplanner.selectedCourses.map(function (subjects_Array, subjectIndex) {// keep only wanted teachers
+                            if (scheduleplanner.namesOfWantedTeachers[subjectIndex].length == 0)return subjects_Array;
+                            else
+                                return subjects_Array.filter(function (courses_Array) {
+                                    return courses_Array.filter(function (section_Object) {
+                                        var exist = false;
+                                        section_Object['courses'].forEach(function (section_) {
+                                            console.log("section teacher:" + section_.teacher + " wanted teachers:" + scheduleplanner.namesOfWantedTeachers[subjectIndex]);
+                                            if (isTeacherIn(section_, scheduleplanner.namesOfWantedTeachers[subjectIndex])) {
+                                                console.log("true");
+                                                exist = true;
+                                            }
+                                        });
+                                        console.log("exist:" + exist);
+                                        return exist;
+                                    }).length;
+                                })
+                        });
+
+                        var selectedCoursesAfterRemovingUnwantedTeachers = selectedCoursesAfterGettingWantedTeachers.map(function (subjects_Array, subjectIndex) {// remove unwanted teachers
+                            if (scheduleplanner.namesOfUnwantedTeachers[subjectIndex].length == 0)return subjects_Array;
+                            else
+                                return subjects_Array.filter(function (courses_Array) {
+                                    return courses_Array.filter(function (section_Object) {
+                                        var exist = false;
+                                        section_Object['courses'].forEach(function (section_) {
+                                            console.log("section teacher:" + section_.teacher + " wanted teachers:" + scheduleplanner.namesOfUnwantedTeachers[subjectIndex]);
+                                            if (isTeacherIn(section_, scheduleplanner.namesOfUnwantedTeachers[subjectIndex])) {
+                                                console.log("true");
+                                                exist = true;
+                                            }
+                                        });
+                                        console.log("exist:" + exist);
+                                        return !exist;
+                                    }).length;
+                                })
+                        })
+
+                        function isTeacherIn(section_, teachers_) {//checks if one of the teachers teach that section
+                            return teachers_.some(function (teacher_) {
+                                return teacher_.split(' ').every(function (teacher_names) {// ahmad abdulfateh => ['ahmad' ,'abdulfateh']
+                                    return section_.teacher.indexOf(teacher_names) > -1;
+                                })
+                            })
+                        }
 
                         /*
                          var aii = [];
@@ -287,10 +343,10 @@ var scheduleplanner = {
                          */
 
 
-                        console.log(this.selectedCourses);
-                        this.calculatedSchedule = scheduleplanner.calculateSchedule(this.selectedCourses);
-                        console.log(this.calculatedSchedule);
-                        callback(this.calculatedSchedule);
+                        console.log(scheduleplanner.selectedCourses);
+                        scheduleplanner.calculatedSchedule = scheduleplanner.calculateSchedule(selectedCoursesAfterRemovingUnwantedTeachers);
+                        console.log(scheduleplanner.calculatedSchedule);
+                        callback(scheduleplanner.calculatedSchedule);
 
                     }
                 } else {
