@@ -478,13 +478,13 @@ var fetchDep = function (university, placeID, degreeID, callback) {//done
                 return currentValue["DepartmentName"]
             }), null);
         } else {
-            console.log('starting');
+            //console.log('starting');
             var childProcess_copy = childProcess;
             childProcess_copy.execFile(binPath, childArgsDepKSU, function (err, stdout, stderr) {
                 var timeout_error = false;
                 console.log('place: ' + placeID + ' degree: ' + degreeID + ' deps fetched');
                 try {
-                    console.log(stdout);
+                    //console.log(stdout);
                     var output = JSON.parse(stdout);
                     //console.log(output);
                 } catch (error) {
@@ -498,12 +498,12 @@ var fetchDep = function (university, placeID, degreeID, callback) {//done
                     var e = "Error loading";
                     console.log(e);
                     console.log();
-                    console.log();
+                    //console.log();
                     callback(null, e);
                     return;
                 }
-                console.log();
-                console.log();
+                //console.log();
+                //console.log();
                 if (!timeout_error) {
                     for (var i = 0; i < output.length; i++) {
                         universities[0]["Places"][placeID]["Degrees"][degreeID]["Departments"].push({
@@ -553,7 +553,7 @@ var fetchPlaces = function (university, callback) { //done
 
                 try {
 
-                    console.log('error: ' + err + ' output:' + stdout);
+                    //console.log('error: ' + err + ' output:' + stdout);
                     if (err) console.log("error details: " + JSON.stringify(err));
                     var output = JSON.parse(stdout);
                 } catch (error) {
