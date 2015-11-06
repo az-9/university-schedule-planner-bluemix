@@ -20,10 +20,13 @@ childArgs = [
 
 
 var fetchDurationInSec = 60 * 60 * 24 //one day //[seconds]
-var fetchDepsInProgress = false;
+var fetchDepsInProgressEN = false;
+var fetchDepsInProgressAR = false;
 
 //var rawksu = JSON.parse('{"0":{"date":0},"1":{"date":0},"2":{"date":0},"3":{"date":0},"4":{"date":0},"5":{"date":0},"6":{"date":0},"7":{"date":0},"8":{"date":0},"9":{"date":0},"10":{"date":0},"11":{"date":0},"12":{"date":0},"13":{"date":0},"14":{"date":0},"15":{"date":0},"16":{"date":0},"17":{"date":0},"18":{"date":0},"19":{"date":0},"20":{"date":0},"21":{"date":0},"22":{"date":0},"23":{"date":0},"24":{"date":0},"25":{"date":0},"26":{"date":0},"27":{"date":0},"28":{"date":0},"29":{"date":0},"30":{"date":0},"31":{"date":0},"32":{"date":0},"33":{"date":0},"34":{"date":0},"35":{"date":0},"36":{"date":0},"37":{"date":0},"38":{"date":0},"39":{"date":0},"40":{"date":0},"41":{"date":0},"42":{"date":0},"43":{"date":0},"44":{"date":0},"45":{"date":0},"46":{"date":0},"47":{"date":0},"48":{"date":0},"49":{"date":0},"50":{"date":0},"51":{"date":0},"52":{"date":0},"53":{"date":0},"54":{"date":0},"55":{"date":0},"56":{"date":0},"57":{"date":0},"58":{"date":0},"59":{"date":0},"60":{"date":0},"61":{"date":0},"62":{"date":0},"63":{"date":0},"64":{"date":0},"65":{"date":0},"66":{"date":0},"67":{"date":0},"68":{"date":0},"69":{"date":0},"70":{"date":0},"71":{"date":0},"72":{"date":0},"73":{"date":0},"74":{"date":0},"75":{"date":0},"76":{"date":0},"77":{"date":0},"78":{"date":0},"79":{"date":0},"80":{"date":0},"81":{"date":0},"82":{"date":0},"83":{"date":0},"84":{"date":0},"85":{"date":0},"86":{"date":0},"87":{"date":0},"88":{"date":0},"89":{"date":0},"90":{"date":0},"91":{"date":0},"92":{"date":0},"93":{"date":0},"94":{"date":0},"95":{"date":0},"96":{"date":0},"97":{"date":0},"98":{"date":0},"99":{"date":0},"100":{"date":0},"101":{"date":0},"102":{"date":0},"103":{"date":0},"104":{"date":0},"105":{"date":0},"106":{"date":0},"107":{"date":0},"108":{"date":0},"109":{"date":0},"110":{"date":0},"111":{"date":0},"112":{"date":0},"113":{"date":0},"114":{"date":0},"115":{"date":0},"116":{"date":0},"117":{"date":0},"118":{"date":0},"119":{"date":0},"120":{"date":0},"121":{"date":0},"122":{"date":0},"123":{"date":0},"124":{"date":0}}');
-var universities = [{"UniversityName": "KSU", "UniversityID": 0, "PlacesFetchDate": 0, "Places": []}]; // JSON.parse('[{"UniversityName":"KSU","UniversityID":0,"PlacesFetchDate":0,"Places":[{"PlaceName":"riyadh males","PlaceID":0,"DegreesFetchDate":0,"Degrees":[{"DegreeName":"bachelor","DegreeID":0,"DepartmentsFetchDate":0,"Departments":[{"DepartmentName":"SWE","DepartmentID":121,"CoursesTitles":[],"Courses":["..."],"CoursesFetchDate":0}]}]}]},{}]');
+var universitiesAR = [{"UniversityName": "KSU", "UniversityID": 0, "PlacesFetchDate": 0, "Places": []}]; // JSON.parse('[{"UniversityName":"KSU","UniversityID":0,"PlacesFetchDate":0,"Places":[{"PlaceName":"riyadh males","PlaceID":0,"DegreesFetchDate":0,"Degrees":[{"DegreeName":"bachelor","DegreeID":0,"DepartmentsFetchDate":0,"Departments":[{"DepartmentName":"SWE","DepartmentID":121,"CoursesTitles":[],"Courses":["..."],"CoursesFetchDate":0}]}]}]},{}]');
+var universitiesEN = [{"UniversityName": "KSU", "UniversityID": 0, "PlacesFetchDate": 0, "Places": []}]; // JSON.parse('[{"UniversityName":"KSU","UniversityID":0,"PlacesFetchDate":0,"Places":[{"PlaceName":"riyadh males","PlaceID":0,"DegreesFetchDate":0,"Degrees":[{"DegreeName":"bachelor","DegreeID":0,"DepartmentsFetchDate":0,"Departments":[{"DepartmentName":"SWE","DepartmentID":121,"CoursesTitles":[],"Courses":["..."],"CoursesFetchDate":0}]}]}]},{}]');
+
 //{"121": { "date": 0 } ,"122": { "date": 0 }};               //[{"UniversityName":"KSU","UniversityID":"0","PlacesFetchData":0,"Places":[{"PlaceName":"riyadh males","PlaceID":"0","DepartmentsFetchDate":0,"Departments":[{"DepartmentName":"SWE","DepartmentID":"121","CoursesFetchDate":0,"Courses":["..."]}]}]},{}];
 var universitiesInfo = [{"departmentsUpdateDate": 0}];//ksu
 var DepsFetchDate;
@@ -35,17 +38,17 @@ var queues = [];
 var queuesCur = -1;//uninitialized must be initialized with initQueues()
 
 var updateQueue = function () {//creates queue for every dep in every university
-    for (var i = 0; i < universities.length; i++) {
+    for (var i = 0; i < universitiesAR.length; i++) {
         queue.push([]);//create university
-        for (var j in universities[i]["Places"]) {
-            if (universities[i]["Places"].hasOwnProperty(j)) {
+        for (var j in universitiesAR[i]["Places"]) {
+            if (universitiesAR[i]["Places"].hasOwnProperty(j)) {
                 queue[queue.length - 1].push([]);//create place
-                for (var k in universities[i]["Places"][j]["Degrees"]) {
-                    if (universities[i]["Places"][j]["Degrees"].hasOwnProperty(k)) {
+                for (var k in universitiesAR[i]["Places"][j]["Degrees"]) {
+                    if (universitiesAR[i]["Places"][j]["Degrees"].hasOwnProperty(k)) {
                         queue[queue.length - 1][queue[queue.length - 1].length - 1].push([]);//create degree
                         //queue[i][j][k] = [];
-                        for (var l in universities[i]["Places"][j]["Degrees"][k]["Departments"]) {
-                            if (universities[i]["Places"][j]["Degrees"][k]["Departments"].hasOwnProperty(l)) {
+                        for (var l in universitiesAR[i]["Places"][j]["Degrees"][k]["Departments"]) {
+                            if (universitiesAR[i]["Places"][j]["Degrees"][k]["Departments"].hasOwnProperty(l)) {
                                 queue[queue.length - 1][queue[queue.length - 1].length - 1][queue[queue.length - 1][queue[queue.length - 1].length - 1].length - 1] = new Promise(function (resolve, reject) {
                                     resolve("success");
                                 });
@@ -70,13 +73,13 @@ var initQueues = function () {
      */
 
     courses_queue = async.queue(function (task, callback) {
-        fetch(task.UniversityName, task.PlaceID, task.DegreeID, task.DepartmentID, function () {
+        fetch(task.language,task.UniversityName, task.PlaceID, task.DegreeID, task.DepartmentID, function () {
             callback();
         });
     }, 1);
 
     dep_queue = async.queue(function (task, callback) {
-        fetchDep(task.UniversityName, task.PlaceID, task.DegreeID, function (data, error) {
+        fetchDep(task.language,task.UniversityName, task.PlaceID, task.DegreeID, function (data, error) {
 
             //console.log(JSON.stringify(data));
             callback();
@@ -96,7 +99,19 @@ var queueFetch = function (callback) {
 }
 
 
-var fetch = function fetch(university, placeID, degreeID, depID, callback) {//done
+var fetch = function fetch(language,university, placeID, degreeID, depID, callback) {//done
+
+
+
+    var universities;
+    if(language=="AR") {
+        universities=universitiesAR;
+    }
+    else {
+        universities=universitiesEN;
+    }
+
+
 
     if (universities[0]["Places"][placeID]["Degrees"][degreeID]["Departments"][depID] == undefined) {
         console.log("Error : department does not exist");
@@ -117,6 +132,7 @@ var fetch = function fetch(university, placeID, degreeID, depID, callback) {//do
             childArgs2[3] = depID;
             childArgs2[4] = placeID;
             childArgs2[5] = degreeID;
+            childArgs2[6] = language;
 
 
             //console.log("connecting");
@@ -344,7 +360,17 @@ var fetch = function fetch(university, placeID, degreeID, depID, callback) {//do
     }
 };
 
-var getSubjects = function (university, placeID, degreeID, depID, someSubjects, callback) {
+var getSubjects = function (language,university, placeID, degreeID, depID, someSubjects, callback) {
+
+
+    var universities;
+    if(language=="AR") {
+        universities=universitiesAR;
+    }
+    else {
+        universities=universitiesEN;
+    }
+
 
     if (universities[0]["Places"][placeID]["Degrees"][degreeID]["Departments"][depID] == undefined) {
         console.log("department does not exist");
@@ -367,6 +393,7 @@ var getSubjects = function (university, placeID, degreeID, depID, someSubjects, 
 
 
             courses_queue.push({
+                'language':language,
                 'UniversityName': university,
                 'PlaceID': placeID,
                 'DegreeID': degreeID,
@@ -389,7 +416,7 @@ var getSubjects = function (university, placeID, degreeID, depID, someSubjects, 
 
 
             queueFetch(function () {
-                fetch(university, placeID, degreeID, depID, function (data, error) {
+                fetch(language,university, placeID, degreeID, depID, function (data, error) {
                     if (error != null) {
                         callback(null, {"error": "didnt load"});
 
@@ -422,7 +449,18 @@ var getSubjects = function (university, placeID, degreeID, depID, someSubjects, 
 };
 
 
-var getSubjectsTitle = function (university, placeID, degreeID, depID, callbackTitles) {
+var getSubjectsTitle = function (language,university, placeID, degreeID, depID, callbackTitles) {
+
+
+    var universities;
+    if(language=="AR") {
+        universities=universitiesAR;
+    }
+    else {
+        universities=universitiesEN;
+    }
+
+
 
     if (universities[0]["Places"][placeID]["Degrees"][degreeID]["Departments"][depID] == undefined) {
         callbackTitles(null, "department does not exist : getSubjectsTitle() ");
@@ -434,6 +472,7 @@ var getSubjectsTitle = function (university, placeID, degreeID, depID, callbackT
 
         } else {
             courses_queue.push({
+                'language':language,
                 'UniversityName': university,
                 'PlaceID': placeID,
                 'DegreeID': degreeID,
@@ -443,7 +482,7 @@ var getSubjectsTitle = function (university, placeID, degreeID, depID, callbackT
             });
 
             queueFetch(function () {
-                fetch(university, placeID, degreeID, depID, getTitle);
+                fetch(language,university, placeID, degreeID, depID, getTitle);
             });
 
 
@@ -453,7 +492,7 @@ var getSubjectsTitle = function (university, placeID, degreeID, depID, callbackT
         if (universities[0]["Places"][placeID]["Degrees"][degreeID]["Departments"][depID]['Courses'] == undefined) callbackTitles(null, "courses not retrieved");
         else {
             var titles = universities[0]["Places"][placeID]["Degrees"][degreeID]["Departments"][depID]['Courses'].map(function (courses) {
-                return courses[0][0]['title'];
+                return courses[0][0]['title']+" - "+courses[0][0]['description'];
             });
             universities[0]["Places"][placeID]["Degrees"][degreeID]["Departments"][depID]['CoursesTitles'] = titles;
             callbackTitles(titles, null);
@@ -461,14 +500,28 @@ var getSubjectsTitle = function (university, placeID, degreeID, depID, callbackT
     };
 }
 
-var fetchDep = function (university, placeID, degreeID, callback) {//done
+var fetchDep = function (language,university, placeID, degreeID, callback) {//done
+
+
+
+    var universities;
+    if(language=="AR") {
+        universities=universitiesAR;
+    }
+    else {
+        universities=universitiesEN;
+
+    }
+
+
 
     var childArgsDepKSU = [
         '--ignore-ssl-errors=yes',
         '--web-security=no',
         path.join(__dirname, 'fetchDepKSUphantom.js'),
         placeID,
-        degreeID
+        degreeID,
+        language
     ];
 
 
@@ -532,11 +585,28 @@ var fetchDep = function (university, placeID, degreeID, callback) {//done
 
 };
 
-var fetchPlaces = function (university, callback) { //done
+var fetchPlaces = function (language,university, callback) { //done
+
+
+
+
+    var universities;
+    if(language=="AR") {
+        universities=universitiesAR;
+    }
+    else {
+        universities=universitiesEN;
+    }
+
+
+
+
+
     childArgsDepKSU = [
         '--ignore-ssl-errors=yes',
         '--web-security=no',
-        path.join(__dirname, 'fetchPlaceKSUphantom.js')
+        path.join(__dirname, 'fetchPlaceKSUphantom.js'),
+        language
     ];
 
 
@@ -592,10 +662,28 @@ var fetchPlaces = function (university, callback) { //done
 
 };
 
-var fetchDegrees = function (university, callback) {// Done
+var fetchDegrees = function (language ,university, callback) {// Done
+
+
+
+
+
+    var universities;
+    if(language=="AR") {
+        universities=universitiesAR;
+    }
+    else {
+        universities=universitiesEN;
+    }
+
+
+
+
+
     childArgsDepKSU = [
         '--ignore-ssl-errors=yes',
-        path.join(__dirname, 'fetchDegreesKSUphantom.js')
+        path.join(__dirname, 'fetchDegreesKSUphantom.js'),
+        language
     ];
 
 
@@ -645,17 +733,30 @@ var fetchDegrees = function (university, callback) {// Done
 
 };
 
-var fetchDeps = function (callback) {
+var fetchDeps = function (language,callback) {
+
+    var universities;
+    var fetchDepsInProgress;
+    if(language=="AR") {
+        universities=universitiesAR;
+        fetchDepsInProgress=fetchDepsInProgressAR
+    }
+    else {
+        universities=universitiesEN;
+        fetchDepsInProgress=fetchDepsInProgressEN;
+    }
 
     if (callback != undefined) {
-        callback(getDeps());
+        callback(getDeps(language));
         return;
     }
     if (fetchDepsInProgress) {
         return;
     }
 
-    fetchDepsInProgress = true;
+    if(language=="AR") fetchDepsInProgressAR=true;
+    else    fetchDepsInProgressEN=true;
+
 
     var TotalDepsFetched = 0;
     var TotalDepsUpdated = 0;
@@ -667,19 +768,27 @@ var fetchDeps = function (callback) {
         (function () {
             var uniname = universities[k]['UniversityName'];
             var uniIndex = k;
-            fetchPlaces(uniname, function (data, error) {
+            fetchPlaces(language,uniname, function (data, error) {
                 if (error != null) {
 
                     console.log(error);
-                    fetchDepsInProgress = false;
+
+                    if(language=="AR") fetchDepsInProgressAR=false;
+                    else    fetchDepsInProgressEN=false;
+
+
                 } else {
                     //test
                     if ((Date.now() - starttime) > 100) console.log(data.length + ' places fetched');
-                    fetchDegrees(uniname, function (data2, error2) {
+                    fetchDegrees(language,uniname, function (data2, error2) {
                         if (error2 != null) {
 
                             console.log(error2);
-                            fetchDepsInProgress = false;
+
+                            if(language=="AR") fetchDepsInProgressAR=false;
+                            else    fetchDepsInProgressEN=false;
+
+
                         } else {
                             if ((Date.now() - starttime) > 100) console.log(data2.length + ' degrees fetched');
 
@@ -702,6 +811,7 @@ var fetchDeps = function (callback) {
                                         TotalDepsFetched++;
 
                                         dep_queue.push({
+                                            'language':language,
                                             'UniversityName': uniname,
                                             'PlaceID': placeindex,
                                             'DegreeID': degreeIndex
@@ -728,7 +838,11 @@ var fetchDeps = function (callback) {
 
                             dep_queue.drain = function () {
                                 if ((Date.now() - starttime) > 1000) console.log(TotalDepsFetched + ' departments fetched in ' + (Date.now() - starttime) / 1000 + ' secs');
-                                fetchDepsInProgress = false;
+
+                                if(language=="AR") fetchDepsInProgressAR=false;
+                                else    fetchDepsInProgressEN=false;
+
+
                             };
 
                         }
@@ -742,7 +856,19 @@ var fetchDeps = function (callback) {
 
 }
 
-var getDeps = function () {
+var getDeps = function (language) {
+
+
+    var universities;
+    if(language=="AR") {
+        universities=universitiesAR;
+    }
+    else {
+        universities=universitiesEN;
+    }
+
+
+
     var allDeps = universities.map(function (currentUniversity) {
         return {
             "UniversityID": currentUniversity["UniversityID"],
@@ -784,14 +910,16 @@ var isUniversityExist = function (uniName) { // no need
 module.exports = function () {
     initQueues();
 
-    setInterval(fetchDeps, 6 * 1000);//60*60*1000
+    //setInterval(fetchDeps, 6 * 1000,'AR');//60*60*1000
+    setInterval(fetchDeps, 6 * 1000,'EN');//60*60*1000
 
-    fetchDeps();
+    //fetchDeps('AR');
+    fetchDeps('EN');
 
     return {
 
 
-        "fetch": function (university, placeID, degreeID, depID, callback) {
+        "fetch": function (language,university, placeID, degreeID, depID, callback) {
             var uni = 0;
 
             //here you can add other universities
@@ -800,6 +928,7 @@ module.exports = function () {
             //
 
             courses_queue.push({
+                'language':language,
                 'UniversityName': university,
                 'PlaceID': placeID,
                 'DegreeID': degreeID,
@@ -809,7 +938,7 @@ module.exports = function () {
             });
 
             queueFetch(function () {
-                fetch(university, placeID, degreeID, depID, callback)
+                fetch(language,university, placeID, degreeID, depID, callback)
             });
         },
         "getSubjects": getSubjects,

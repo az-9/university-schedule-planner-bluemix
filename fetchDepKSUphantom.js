@@ -55,13 +55,8 @@ function waitFor(testFx, onReady, timeOutMillis) {
         }, 250); //< repeat check every 250ms
 };
 
-page.open('https://edugate.ksu.edu.sa/ksu/ui/guest/timetable/index/scheduleTreeCoursesIndex.faces', function (status) {
 
-    if (system.args.length < 1) {
-        console.log('{"Error":"no arguments"}');
-        phantom.exit(1);
-    }
-
+page.open('https://edugate.ksu.edu.sa/ksu/ui/home.faces', function (status) {
     if (status === 'fail') {
         console.log(
             "{\"Error\": \"opening url '" + page.reason_url
@@ -70,68 +65,111 @@ page.open('https://edugate.ksu.edu.sa/ksu/ui/guest/timetable/index/scheduleTreeC
         phantom.exit(1);
     } else {
 
-        page.evaluate(function (placeID) {
-
-            $(".pui-dropdown-item.pui-dropdown-list-item.ui-corner-all", $(".pui-dropdown-items.pui-dropdown-list.ui-widget-content.ui-widget.ui-helper-reset")[1]).eq(parseInt(placeID)).click();
+        if (!page.evaluate(function (language) {
 
 
-        }, system.args[1]);
-
+                return (language == "AR" && !(document.title.indexOf("King") > -1)) ||
+                    (language == "EN" && (document.title.indexOf("King") > -1));
+            }, system.args[3])) {
+            page.evaluate(function () {
+                document.forms['headerForm']['headerForm:_idcl'].value = 'headerForm:_id21';
+                document.forms['headerForm'].submit();
+                return;
+            });
+        }
         waitFor(function check() {
-            return page.evaluate(function (placeID) {
-                return document.readyState === "complete" && $(".pui-dropdown-item.pui-dropdown-list-item.ui-corner-all.ui-state-highlight", $(".pui-dropdown-items.pui-dropdown-list.ui-widget-content.ui-widget.ui-helper-reset")[1]).index() == parseInt(placeID)
-            }, system.args[1]);
+
+            return page.evaluate(function (language) {
+                return (document.readyState === "complete" && language == "AR" && !(document.title.indexOf("King") > -1)) ||
+                    (document.readyState === "complete" && language == "EN" && (document.title.indexOf("King") > -1));
+            }, system.args[3]);
 
         }, function onReady() {
 
-            page.evaluate(function (degreeID) {
+            setTimeout(function () {
 
-                $(".pui-dropdown-item.pui-dropdown-list-item.ui-corner-all", $(".pui-dropdown-items.pui-dropdown-list.ui-widget-content.ui-widget.ui-helper-reset")[2]).eq(parseInt(degreeID)).click();
+                page.open('https://edugate.ksu.edu.sa/ksu/ui/guest/timetable/index/scheduleTreeCoursesIndex.faces', function (status) {
 
-            }, system.args[2]);
+                    if (system.args.length < 1) {
+                        console.log('{"Error":"no arguments"}');
+                        phantom.exit(1);
+                    }
 
-            waitFor(function check() {
-                return page.evaluate(function (degreeID, placeID) {
-                    return document.readyState === "complete" && $(".pui-dropdown-item.pui-dropdown-list-item.ui-corner-all.ui-state-highlight", $(".pui-dropdown-items.pui-dropdown-list.ui-widget-content.ui-widget.ui-helper-reset")[2]).index() == (parseInt(degreeID) + parseInt(placeID));
-                }, system.args[2], system.args[1]);
+                    if (status === 'fail') {
+                        console.log(
+                            "{\"Error\": \"opening url '" + page.reason_url
+                            + "': \"}" + page.reason
+                        );
+                        phantom.exit(1);
+                    } else {
 
-            }, function onReady() {
+                        page.evaluate(function (placeID) {
 
-                var output = page.evaluate(function () {
+                            $(".pui-dropdown-item.pui-dropdown-list-item.ui-corner-all", $(".pui-dropdown-items.pui-dropdown-list.ui-widget-content.ui-widget.ui-helper-reset")[1]).eq(parseInt(placeID)).click();
 
-                    return $.map($('[id^=stree]'), function (ele) {
-                        return ele.text
-                    })
-                    /* .reduce(function (o, v, i) {
-                     var tmp = {};
-                     tmp['DepartmentName'] = v;
-                     tmp['date'] = 0;
-                     o.push(tmp);
-                     return o;
-                     }, []); */
 
+                        }, system.args[1]);
+
+                        waitFor(function check() {
+                            return page.evaluate(function (placeID) {
+                                return document.readyState === "complete" && $(".pui-dropdown-item.pui-dropdown-list-item.ui-corner-all.ui-state-highlight", $(".pui-dropdown-items.pui-dropdown-list.ui-widget-content.ui-widget.ui-helper-reset")[1]).index() == parseInt(placeID)
+                            }, system.args[1]);
+
+                        }, function onReady() {
+
+                            page.evaluate(function (degreeID) {
+
+                                $(".pui-dropdown-item.pui-dropdown-list-item.ui-corner-all", $(".pui-dropdown-items.pui-dropdown-list.ui-widget-content.ui-widget.ui-helper-reset")[2]).eq(parseInt(degreeID)).click();
+
+                            }, system.args[2]);
+
+                            waitFor(function check() {
+                                return page.evaluate(function (degreeID, placeID) {
+                                    return document.readyState === "complete" && $(".pui-dropdown-item.pui-dropdown-list-item.ui-corner-all.ui-state-highlight", $(".pui-dropdown-items.pui-dropdown-list.ui-widget-content.ui-widget.ui-helper-reset")[2]).index() == (parseInt(degreeID) + parseInt(placeID));
+                                }, system.args[2], system.args[1]);
+
+                            }, function onReady() {
+
+                                var output = page.evaluate(function () {
+
+                                    return $.map($('[id^=stree]'), function (ele) {
+                                        return ele.text
+                                    })
+                                    /* .reduce(function (o, v, i) {
+                                     var tmp = {};
+                                     tmp['DepartmentName'] = v;
+                                     tmp['date'] = 0;
+                                     o.push(tmp);
+                                     return o;
+                                     }, []); */
+
+                                });
+
+                                //console.log(JSON.stringify(output));
+                                console.log(JSON.stringify(output));
+
+                                //fs.write("/Users/abdulazizm/WebstormProjects/phantomOutput.txt",JSON.stringify(output),'W');
+                                exit(0);
+                                function exit(code) {
+                                    setTimeout(function () {
+                                        phantom.exit(code);
+                                    }, 0);
+                                    phantom.onError = function () {
+                                    };
+                                }
+                            })
+
+
+                        });//10000
+
+
+                    }
                 });
 
-                //console.log(JSON.stringify(output));
-                console.log(JSON.stringify(output));
-
-                //fs.write("/Users/abdulazizm/WebstormProjects/phantomOutput.txt",JSON.stringify(output),'W');
-                exit(0);
-                function exit(code) {
-                    setTimeout(function () {
-                        phantom.exit(code);
-                    }, 0);
-                    phantom.onError = function () {
-                    };
-                }
-            })
-
-
-        });//10000
-
-
+            }, 100)
+        })
     }
-});
+})
 
 
 //parseDateInfo("");

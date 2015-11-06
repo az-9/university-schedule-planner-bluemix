@@ -257,7 +257,7 @@ function scheduleToEvents(start, end, timezone, callback) {
             var m = calendar.moment();
             m.add(7, 'days');
             //console.log(out);
-            $('#calendar1 .fc-center').text(weeknumber + " / " + calculatedScheduleTemp.length + " " + ((calculatedScheduleTemp[weeknumber - 1]["available"]) ? "(متاح)" : "(غير متاح)"));
+            $('#calendar1 .fc-center').text(weeknumber + " / " + calculatedScheduleTemp.length + " " + ((calculatedScheduleTemp[weeknumber - 1]["available"]) ? "(available)" : "(not available)"));
             callback(out);
         } else {
             $('#calendar1').fullCalendar('gotoDate', '2014-06-08');
@@ -288,7 +288,7 @@ function scheduleToEvents2(start, end, timezone, callback) {
             var m = calendar.moment();
             m.add(7, 'days');
             //console.log(out);
-            $('#calendar2 .fc-center').text(weeknumber + " / " + calculatedScheduleTemp.length + " " + ((calculatedScheduleTemp[weeknumber - 1]["available"]) ? "(متاح)" : "(غير متاح)"));
+            $('#calendar2 .fc-center').text(weeknumber + " / " + calculatedScheduleTemp.length + " " + ((calculatedScheduleTemp[weeknumber - 1]["available"]) ? "(available)" : "(not available)"));
             callback(out);
         } else {
             $('#calendar2').fullCalendar('gotoDate', '2014-06-08');
@@ -298,7 +298,7 @@ function scheduleToEvents2(start, end, timezone, callback) {
         $('#calendar2').fullCalendar('gotoDate', '2014-06-08');
     }
     if (calculatedScheduleTemp.length == 0) {
-        $('#calendar2 .fc-center').text("لا يوجد ")
+        $('#calendar2 .fc-center').text("empty ")
     }
     ;
 
@@ -330,7 +330,7 @@ $(document).ready(function () {
     $('#university').change(function () {
         var uniID = $('#university')[0].children[$('#university')[0].selectedIndex].id;
         var options = toOptions(allDeps[$('#university')[0].selectedIndex - 1]['Places'], 'PlaceName', 'PlaceID');
-        $('#place').html('<option selected disabled>اختر المقر</option>' + options);
+        $('#place').html('<option selected disabled>Select Location</option>' + options);
     });
 
     //remove the folwing lines to show all universities
@@ -345,7 +345,7 @@ $(document).ready(function () {
         var uniID = $('#university')[0].children[$('#university')[0].selectedIndex].id;
         var plaID = $('#place')[0].children[$('#place')[0].selectedIndex].id;
         var options = toOptions(allDeps[$('#university')[0].selectedIndex - 1]['Places'][$('#place')[0].selectedIndex - 1]['Degrees'], 'DegreeName', 'DegreeID');
-        $('#degree').html('<option selected disabled>اختر الدرجة</option>' + options);
+        $('#degree').html('<option selected disabled>Select Degree</option>' + options);
     });
     $('#degree').change(function () {
         /*
@@ -354,7 +354,7 @@ $(document).ready(function () {
          var degID = $('#degree')[0].children[$('#degree')[0].selectedIndex].id;
          */
         var options = toOptions(allDeps[$('#university')[0].selectedIndex - 1]['Places'][$('#place')[0].selectedIndex - 1]['Degrees'][$('#degree')[0].selectedIndex - 1]['Departments'], 'DepartmentName', 'DepartmentID');
-        $('#department').html('<option selected disabled>اختر القسم</option>' + options);
+        $('#department').html('<option selected disabled>Select Department</option>' + options);
     });
 
     $('#step3 input ').on('change', function () {
@@ -408,7 +408,7 @@ $(document).ready(function () {
 
         currentEntry.children().eq(0).after('<span class="input-group-btn"> <a style=" margin-right: 10px" type="button" aria-expanded="false" class="btn btn-default collapse-next"> <span class="glyphicon glyphicon-search"></span> </a> </span>');
 
-        currentEntry.after('<div class="collapse"> <div class="well">  <p >المحاضرين ( أسماء المحاضرين مفترقة بفاصلة مثل: السلمان ، اشرف ،أحمد البدري ) :</p> <div class="row"> <div class="form-group col-md-3"> <select class="form-control filter_type"> <option>يحتوي على</option> <option>لا يحتوي على</option> </select> </div> <div class="form-group col-md-9"> <input type="text" class="form-control filter_content"> </div> </div>  </div> </div>')
+        currentEntry.after('<div class="collapse"> <div class="well">  <p> Lecturer ( Lecturer\'s names seperated by a comma) : </p> <div class="row"> <div class="form-group col-md-3"> <select class="form-control filter_type"> <option>contains</option> <option>doesn\'t contain</option> </select> </div> <div class="form-group col-md-9"> <input type="text" class="form-control filter_content"> </div> </div>  </div> </div>')
 
     }).on('click', '.btn-remove', function (e) {
         $(this).parents('.entry:first').next().remove();
@@ -477,7 +477,7 @@ function verify_step2() {
 
 
     if ($('#coursesAddList .entry select').length == 1) {
-        show_error("اختر مادة دراسية واحدة على الآقل");
+        show_error("select atleast one course");
         return false;
     }
 

@@ -1,6 +1,6 @@
 ﻿/**
-* Created by Abdulaziz on 10/8/2014.
-*/
+ * Created by Abdulaziz on 10/8/2014.
+ */
 
 var system = require('system');
 var fs = require('fs');
@@ -55,51 +55,90 @@ function waitFor(testFx, onReady, timeOutMillis) {
         }, 250); //< repeat check every 250ms
 };
 
-page.open('https://edugate.ksu.edu.sa/ksu/ui/guest/timetable/index/scheduleTreeCoursesIndex.faces', function (status) {
 
-    if (system.args.length < 1) {
-        console.log('{"Error":"no arguments"}');
-        phantom.exit(1);
-    }
-
+page.open('https://edugate.ksu.edu.sa/ksu/ui/home.faces', function (status) {
     if (status === 'fail') {
         console.log(
             "{\"Error\": \"opening url '" + page.reason_url
-                + "': \"}" + page.reason
+            + "': \"}" + page.reason
         );
         phantom.exit(1);
     } else {
 
-        waitFor(function check() {
-            return page.evaluate(function () {
-                return document.readyState === "complete" ;
+        if (!page.evaluate(function (language) {
+
+
+                return (language == "AR" && !(document.title.indexOf("King") > -1)) ||
+                    (language == "EN" && (document.title.indexOf("King") > -1));
+            }, system.args[1])) {
+            page.evaluate(function () {
+                document.forms['headerForm']['headerForm:_idcl'].value = 'headerForm:_id21';
+                document.forms['headerForm'].submit();
+                return;
             });
+        }
+        waitFor(function check() {
+
+            return page.evaluate(function (language) {
+                return (document.readyState === "complete" && language == "AR" && !(document.title.indexOf("King") > -1)) ||
+                    (document.readyState === "complete" && language == "EN" && (document.title.indexOf("King") > -1));
+            }, system.args[1]);
 
         }, function onReady() {
 
+            setTimeout(function () {
 
-                var output = page.evaluate(function () {
 
-                    return $.map($(".pui-dropdown-item.pui-dropdown-list-item.ui-corner-all",$(".pui-dropdown-items.pui-dropdown-list.ui-widget-content.ui-widget.ui-helper-reset")[1]),function(ele){return ele.firstChild.data});
+                page.open('https://edugate.ksu.edu.sa/ksu/ui/guest/timetable/index/scheduleTreeCoursesIndex.faces', function (status) {
 
+                    if (system.args.length < 1) {
+                        console.log('{"Error":"no arguments"}');
+                        phantom.exit(1);
+                    }
+
+                    if (status === 'fail') {
+                        console.log(
+                            "{\"Error\": \"opening url '" + page.reason_url
+                            + "': \"}" + page.reason
+                        );
+                        phantom.exit(1);
+                    } else {
+
+                        waitFor(function check() {
+                            return page.evaluate(function () {
+                                return document.readyState === "complete";
+                            });
+
+                        }, function onReady() {
+
+
+                            var output = page.evaluate(function () {
+
+                                return $.map($(".pui-dropdown-item.pui-dropdown-list-item.ui-corner-all", $(".pui-dropdown-items.pui-dropdown-list.ui-widget-content.ui-widget.ui-helper-reset")[1]), function (ele) {
+                                    return (ele.firstChild)?ele.firstChild.data : null ;
+                                });
+
+                            });
+
+                            //console.log(JSON.stringify(output));
+                            console.log(JSON.stringify(output));
+
+                            //fs.write("/Users/abdulazizm/WebstormProjects/phantomOutput.txt",JSON.stringify(output),'W');
+
+                            setTimeout(function () {
+                                phantom.exit();
+                            }, 1000);
+
+                        }, 10000);
+
+
+                    }
                 });
 
-                //console.log(JSON.stringify(output));
-            console.log(JSON.stringify(output));
-
-            //fs.write("/Users/abdulazizm/WebstormProjects/phantomOutput.txt",JSON.stringify(output),'W');
-
-                setTimeout(function () {
-                    phantom.exit();
-                }, 1000);
-
-        }, 10000);
-
-
-
+            }, 100)
+        });
     }
 });
-
 
 
 //parseDateInfo("");
