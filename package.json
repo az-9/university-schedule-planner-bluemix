@@ -8,7 +8,7 @@
     "email": "az-9@live.com"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node app.js"
   },
   "dependencies": {
     "body-parser": "~1.8.1",
