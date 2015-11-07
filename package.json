@@ -7,8 +7,8 @@
     "name": "Abdulaziz",
     "email": "az-9@live.com"
   },
-  "engines": {
-    "iojs": "*"
+  "scripts": {
+    "start": "node server.js"
   },
   "dependencies": {
     "body-parser": "~1.8.1",
