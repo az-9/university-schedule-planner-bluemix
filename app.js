@@ -1,102 +1,56 @@
-﻿if (process.env.NEW_RELIC_LICENSE_KEY) {
-    console.log("newrelic activating");
-    require('newrelic');
+﻿"use strict"
+
+let cfenv   = require("cfenv")
+let express = require("express")
+
+// get the core cfenv application environment
+let appEnv = cfenv.getAppEnv()
+
+// create the express app
+let app = express()
+
+// have all GET requests handled by the onRequest function
+app.get("*", onRequest)
+
+// start the server, writing a message once it's actually started
+app.listen(appEnv.port, appEnv.bind, function() {
+    log(`server starting on ${appEnv.url}`)
+})
+
+// all done! server should start listening and responding to requests!
+
+//------------------------------------------------------------------------------
+// when a request is sent to the server, respond with "Hello World" text
+//------------------------------------------------------------------------------
+function onRequest(request, response) {
+    log(`request ${request.method} ${request.url}`)
+
+    let html = "<h1>Hello, world!</h1>"
+
+    response.send(html)
 }
 
-//process.env.NODE_ENV="development";
-process.env.NODE_ENV=undefined;
+/*------------------------------------------------------------------------------
+ other interesting values available:
+ request.method            - HTTP method used
+ request.url               - full URL requested
+ request.headers           - HTTP headers as a JavaScript object
+ request.headers.host      - the Host: header value
+ request.query             - query string parameters
+ request.query.a           - value of the querystring parameter `a` (eg ?a=1)
+ appEnv.isLocal            - false if running on Bluemix
+ appEnv.app.limits.mem     - # of MB of memory allocated
+ appEnv.app.limits.disk    - # of GB of disk allocated
+ appEnv.app.name           - name of the application
+ appEnv.app.space_name     - space of the application
+ appEnv.app.instance_index - instance # of this server
+ appEnv.app.port           - port the server is running
+ appEnv.app.started_at     - when server started, eg '2014-09-19 01:17:43 +0000'
+ ------------------------------------------------------------------------------*/
 
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var scheduleplanner = require('./routes/scheduleplenner.js');
-
-
-var app = express();
-
-// ddos
-
-/*
-var Ddos = require('ddos');
-var params = {};
-params.errormessage = "error: too many requests";
-var ddos = new Ddos(params);
-app.use(ddos.express);
-*/
-
-
-// view engine setup
-//app.set('views', path.join(__dirname, '/views'));
-//app.engine('html', require('ejs').renderFile);
-
-app.set('view engine', 'ejs');
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(require('stylus').middleware(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', routes);
-app.use('/users', users);
-app.use('/scheduleplanner', scheduleplanner);
-
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
-// error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error.html', {
-            message: err.message,
-            error: err
-        });
-    });
+//------------------------------------------------------------------------------
+// log a message with a common prefix of the package name
+//------------------------------------------------------------------------------
+function log(message) {
+    console.log(`${appEnv.name}: ${message}`)
 }
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function (err, req, res, next) {
-    res.status(err.status || 404);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
-});
-
-console.log('process.env.PORT :'+process.env.PORT );
-
-function isIojs(callback) {
-    require('child_process').exec(process.execPath + ' -h', function(err, help) {
-        return err ? callback(err) : callback(null, /iojs\.org/.test(help));
-    });
-};
-
-isIojs(function(er,isit){
-    console.log('is iojs ? '+ isit );
-
-});
-
-
-var port = process.env.PORT || process.env.VCAP_APP_PORT  || 3000;
-
-app.listen(port, function () {
-    console.log('Express server listening on port ' + port);
-});
